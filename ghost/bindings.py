@@ -84,12 +84,13 @@ QNetworkCookie = QtNetwork.QNetworkCookie
 QSslConfiguration = QtNetwork.QSslConfiguration
 QSsl = QtNetwork.QSsl
 
-QtWebKit = _import('QtWebKit')
 if name == "PyQt5":
-    QtWebKitWidgets = _import("QtWebKitWidgets")
-    QWebPage = QtWebKitWidgets.QWebPage
-    QWebView = QtWebKitWidgets.QWebView
+    QtWebKit = _import('QtWebEngineCore')
+    QtWebKitWidgets = _import("QtWebEngineWidgets")
+    QWebPage = QtWebKitWidgets.QWebEnginePage
+    QWebView = QtWebKitWidgets.QWebEngineView
 
 else:
+    QtWebKit = _import('QtWebKit')
     QWebPage = QtWebKit.QWebPage
     QWebView = QtWebKit.QWebView
