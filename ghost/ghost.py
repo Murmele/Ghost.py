@@ -40,6 +40,9 @@ from .bindings import (
     QSslConfiguration,
     QSsl,
     QtWebKit,
+    QWebPage,
+    QWebView,
+    QtWebKitWidgets
 )
 
 __version__ = "0.2.3"
@@ -71,7 +74,8 @@ class QTMessageProxy(object):
     def __init__(self, logger):
         self.logger = logger
 
-    def __call__(self, msgType, msg):
+    def __call__(self, *args):
+        msgType, msg = args[0], args[-1]
         levels = {
             QtDebugMsg: 'debug',
             QtWarningMsg: 'warn',
@@ -81,7 +85,7 @@ class QTMessageProxy(object):
         getattr(self.logger, levels[msgType])(msg)
 
 
-class GhostWebPage(QtWebKit.QWebPage):
+class GhostWebPage(QWebPage):
     """Overrides QtWebKit.QWebPage in order to intercept some graphical
     behaviours like alert(), confirm().
     Also intercepts client side console.log().
@@ -268,7 +272,7 @@ class Ghost(object):
         defaults=None,
     ):
         if not binding:
-            raise Exception("Ghost.py requires PySide or PyQt4")
+            raise Exception("Ghost.py requires PySide, PyQt4 or PyQt5")
 
         self.logger = configure(
             'ghost',
@@ -451,7 +455,7 @@ class Session(object):
 
         self.main_frame = self.page.mainFrame()
 
-        class GhostQWebView(QtWebKit.QWebView):
+        class GhostQWebView(QWebView):
             def sizeHint(self):
                 return QSize(*viewport_size)
 
@@ -624,7 +628,7 @@ class Session(object):
             printer.setFullPage(True)
         printer.setOutputFileName(path)
         if self.webview is None:
-            self.webview = QtWebKit.QWebView()
+            self.webview = QWebView()
             self.webview.setPage(self.page)
         self.webview.setZoomFactor(zoom_factor)
         self.webview.print_(printer)
